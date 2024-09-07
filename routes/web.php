@@ -10,6 +10,6 @@ Route::get('/dashboard', \App\Livewire\Dashboard::class)
     ->middleware('auth')
     ->name('dashboard');
 
-Route::get('/project/{project}', \App\Livewire\ShowProject::class)
+Route::get('/project/{project}', \App\Livewire\Project\ShowProject::class)
     ->middleware('auth')
     ->name('project');

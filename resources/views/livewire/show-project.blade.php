@@ -18,7 +18,7 @@
     <div class="grid grid-cols-[1fr_6fr] border border-ws-green rounded-md">
         <div class="px-2 space-y-2 text-xl py-5 h-[100vh]">
             <x-gen.btn wire:click="addPage">New Page</x-gen.btn>
-            <x-gen.btn>T</x-gen.btn>
+            <x-gen.btn wire:click="addText">T</x-gen.btn>
         </div>
 
         @isset($this->current_page)

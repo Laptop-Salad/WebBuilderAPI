@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Project;
 
 use App\Models\Project;
 use Illuminate\Support\Facades\Storage;
@@ -9,6 +9,8 @@ use Livewire\Component;
 
 class ShowProject extends Component
 {
+    use ProjectComponents;
+
     #[Locked]
     public Project $project;
 
@@ -22,6 +24,7 @@ class ShowProject extends Component
     {
         $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
         $this->total_pages = count((array)$this->contents);
+        $this->current_page = array_key_first((array)$this->contents);
     }
 
     public function save() {
@@ -35,31 +38,11 @@ class ShowProject extends Component
     public function getChildrenProperty() {
         $serialised_children = [];
 
-        foreach ($this->contents->{$this->current_page} as $child) {
-            $child = $child[0];
+        foreach ($this->contents->{$this->current_page}->children as $child) {
             $serialised_children[] = "<{$child->tag}>{$child->content}</{$child->tag}>";
         }
 
         return $serialised_children;
-    }
-
-    public function addPage() {
-        $formatter = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
-        $this->total_pages++;
-        $page_name = "page_" . $formatter->format($this->total_pages);
-
-
-        $this->contents->{$page_name} = [
-            'children' => [
-                [
-                    'tag' => 'p',
-                    'content' => 'Hello World'
-                ]
-            ]
-        ];
-
-        $this->save();
-        $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
     }
 
     public function render()
