@@ -27,9 +27,11 @@
 
         @isset($this->current_page)
             <div class="bg-white text-black h-[100vh] m-5">
-                @foreach($this->children as $child)
-                    {!! $child !!}
-                @endforeach
+                <div class="revert-all">
+                    @foreach($this->children as $child)
+                        {!! $child !!}
+                    @endforeach
+                </div>
             </div>
         @endisset
     </div>
