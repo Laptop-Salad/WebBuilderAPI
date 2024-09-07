@@ -6,7 +6,7 @@
 
     <div class="border-b py-4">
         @foreach($this->contents as $page => $content)
-            <x-gen.btn wire:click="$set('current_page', '{{$page}}')">{{$page}}</x-gen.btn>
+            <x-gen.btn wire:click="$set('current_page', '{{$page}}')">{{ucwords(str_replace('_', ' ', $page))}}</x-gen.btn>
         @endforeach
     </div>
 
