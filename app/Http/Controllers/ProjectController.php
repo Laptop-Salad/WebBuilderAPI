@@ -6,13 +6,12 @@ use App\Models\Project;
 use App\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
     use Response;
 
-    public function index(Request $request) {
+    public function index() {
         return auth()->user()->projects;
     }
 
@@ -33,22 +32,74 @@ class ProjectController extends Controller
             }
 
             $project = new Project(['name' => $request->name]);
-            $project->user()->associate(auth()->user());
-            $project_path = auth()->user()->id . "/" . $request->name . ".json";
+            $project->user_id = auth()->user()->id;
 
             $project_file_name = strtolower(str_replace(" ", "_", $request->name));
+            $path = $project_file_name . ".json";
 
-            if (!File::exists("projects/" . auth()->user()->id)) {
-                File::makeDirectory("projects/" . auth()->user()->id, 0755, true);
-            }
+            File::put($path, '{}');
 
-            Storage::disk('projects')->put($project_path, '{"h1":{"text":"Hello world"}}');
-            $project->project_path = $project_file_name . ".json";
+            $project->addMedia($path)
+                ->usingFileName($project_file_name . ".json")
+                ->toMediaCollection('projects');
+
             $project->save();
+
+            File::delete($path);
 
             return $this->createMessage('Project created successfully.', 201);
         } catch (\Exception $e) {
-            return $this->createMessage('An error occured', 500);
+            return $this->createMessage('An error occurred: ' . $e->getMessage(), 500);
         }
+    }
+
+    public function updateProjectContent($id, Request $request)
+    {
+        $project = auth()
+            ->user()
+            ->projects()
+            ->where('id', $id)
+            ->with('file')
+            ->first();
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found.'], 404);
+        }
+
+        $content = $request->input('project_contents');
+
+        $temp = tempnam(sys_get_temp_dir(), 'temp');
+        file_put_contents($temp, $content);
+
+        dump($content);
+
+        $project->file->delete();
+
+        $project_file_name = strtolower(str_replace(" ", "_", $project->name));
+
+        $project->addMedia($temp)
+            ->usingFileName($project_file_name . ".json")
+            ->toMediaCollection('projects');
+
+        return response()->json(['message' => 'File updated successfully.'], 200);
+    }
+
+
+    public function getProject($id) {
+        $project = auth()->user()->projects()->where('id', $id)->first();
+
+        $stream = $project->file->stream();
+        $content = stream_get_contents($stream);
+
+        if ($project) {
+            return response()->json([
+                'payload' => [
+                    'project' => $project,
+                    'data' => $content,
+                ],
+            ]);
+        }
+
+        return response()->json('Project not found.', 404);
     }
 }

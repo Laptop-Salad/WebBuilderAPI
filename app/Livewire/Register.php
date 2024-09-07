@@ -27,11 +27,13 @@ class Register extends Component
             return;
         }
 
-        $user = User::create([
+        User::create([
             'name' => $this->name,
             'email' => $this->email,
             'password' => Hash::make($this->password),
         ]);
+
+        $this->redirect(route('login'));
     }
 
     public function render()

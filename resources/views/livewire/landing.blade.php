@@ -3,7 +3,7 @@
     <p class="text-xl my-8 text-center">Sculpt your online presence: Just drag and drop</p>
 
     <div class="my-8 flex space-x-4">
-        <x-gen.link-btn href="http://localhost:4200">Login</x-gen.link-btn>
+        <x-gen.link-btn href="{{route('login')}}">Login</x-gen.link-btn>
         <x-gen.link-btn href="{{route('register')}}">Register</x-gen.link-btn>
     </div>
 </div>
