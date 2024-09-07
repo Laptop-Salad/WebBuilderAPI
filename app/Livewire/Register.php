@@ -34,6 +34,7 @@ class Register extends Component
         ]);
 
         $this->redirect(route('login'));
+        $this->reset('name', 'email', 'password', 'password_confirmation');
     }
 
     public function render()

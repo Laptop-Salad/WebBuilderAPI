@@ -1,4 +1,4 @@
-<div class="text-ws-green h-[100vh] flex flex-col items-center justify-center">
+<div class="text-ws-green flex h-full flex-col items-center justify-center">
     <h1 class="text-3xl font-bold mb-8">Login</h1>
 
     <form

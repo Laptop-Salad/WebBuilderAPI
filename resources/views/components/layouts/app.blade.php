@@ -7,15 +7,19 @@
     <title>WebSculptor</title>
 
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-    <link rel="manifest" href="assets/favicon/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/favicon/apple-touch-icon.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('assets/favicon/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/favicon/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{asset('assets/favicon/site.webmanifest')}}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-    <main class="md:p-20 p-8 bg-stone-900 min-h-screen h-full">
+<body class="bg-stone-900 text-ws-green p-8 md:p-20">
+    <header>
+        <img src="{{asset('assets/logo.png')}}" alt="WebSculptor logo" class="w-12">
+    </header>
+
+    <main class="h-full">
         {{$slot}}
     </main>
 </body>
