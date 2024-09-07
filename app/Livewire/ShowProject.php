@@ -57,6 +57,9 @@ class ShowProject extends Component
                 ]
             ]
         ];
+
+        $this->save();
+        $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
     }
 
     public function render()
