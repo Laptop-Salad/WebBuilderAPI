@@ -31,4 +31,14 @@ trait ProjectComponents {
         $this->save();
         $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
     }
+
+    public function addHeader($header) {
+        $this->contents->{$this->current_page}->children[] = [
+            'tag' => 'H' . $header,
+            'content' => 'Hello World',
+        ];
+
+        $this->save();
+        $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
+    }
 }

@@ -19,6 +19,10 @@
         <div class="px-2 space-y-2 text-xl py-5 h-[100vh]">
             <x-gen.btn wire:click="addPage">New Page</x-gen.btn>
             <x-gen.btn wire:click="addText">T</x-gen.btn>
+
+            @for($i = 1; $i < 7; $i++)
+                <x-gen.btn wire:click="addHeader({{$i}})">Heading {{$i}}</x-gen.btn>
+            @endfor
         </div>
 
         @isset($this->current_page)
