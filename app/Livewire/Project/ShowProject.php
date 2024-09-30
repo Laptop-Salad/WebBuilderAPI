@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Project;
 
+use App\ElementObjects\Text;
 use App\Enums\Element;
 use App\Models\Page;
 use App\Models\Project;
@@ -47,10 +48,9 @@ class ShowProject extends Component
     public function addText($component) {
         $data = $this->current_page->data;
 
-        $data[] = [
-            Element::type->value => $component,
-            Element::content->value => "Hello world",
-        ];
+        $text = new Text(null, $component);
+
+        $data[] = $text->data;
 
         $this->current_page->data = $data;
 
