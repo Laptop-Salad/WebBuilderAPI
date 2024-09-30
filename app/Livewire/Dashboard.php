@@ -25,28 +25,10 @@ class Dashboard extends Component
             return;
         }
 
-        try {
-            $project = new Project(['name' => $this->name]);
-            $project->user_id = auth()->user()->id;
-
-            $project_file_name = strtolower(str_replace(" ", "_", $this->name));
-            $path = $project_file_name . ".json";
-
-            File::put($path, '{}');
-
-            $project->addMedia($path)
-                ->usingFileName($project_file_name . ".json")
-                ->toMediaCollection('projects');
-
-            $project->save();
-
-            File::delete($path);
-
-            $this->redirectRoute('project', compact('project'));
-            return;
-        } catch (\Exception $e) {
-            $this->addError('name', 'An unexpected error occurred while creating this project.');
-        }
+        Project::create([
+            'user_id' => auth()->user()->id,
+            'name' => $this->name,
+        ]);
     }
 
     public function getProjectsProperty() {

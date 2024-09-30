@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Project;
 
+use App\Enums\Element;
+use App\Models\Page;
 use App\Models\Project;
-use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class ShowProject extends Component
@@ -14,35 +16,45 @@ class ShowProject extends Component
     #[Locked]
     public Project $project;
 
-    public $contents;
+    #[Url]
+    public $current_page_id;
 
     public $current_page;
 
-    public $total_pages;
-
-    public function mount()
-    {
-        $this->contents = json_decode(file_get_contents($this->project->file->getPath()));
-        $this->total_pages = count((array)$this->contents);
-        $this->current_page = array_key_first((array)$this->contents);
+    public function mount() {
+        $this->current_page = Page::find($this->current_page_id);
     }
 
-    public function save() {
-        $contents = json_encode($this->contents);
-
-        $project_file_name = strtolower(str_replace(" ", "_", $this->project->name)) . '.json';
-
-        Storage::disk('projects')->put($this->project->file->id . '/' . $project_file_name, $contents);
+    public function addPage() {
+        Page::create([
+            'name' => 'Page ' . $this->pages->count(),
+            'data' => [],
+            'project_id' => $this->project->id,
+        ]);
     }
 
-    public function getChildrenProperty() {
-        $serialised_children = [];
+    public function getPagesProperty() {
+        return Page::where('project_id', $this->project->id)
+            ->orderBy('created_at')
+            ->get();
+    }
 
-        foreach ($this->contents->{$this->current_page}->children as $child) {
-            $serialised_children[] = "<{$child->tag}>{$child->content}</{$child->tag}>";
-        }
+    public function setPage(Page $page) {
+        $this->current_page = $page;
+        $this->current_page_id = $page->id;
+    }
 
-        return $serialised_children;
+    public function addText($component) {
+        $data = $this->current_page->data;
+
+        $data[] = [
+            Element::type->value => $component,
+            Element::content->value => "Hello world",
+        ];
+
+        $this->current_page->data = $data;
+
+        $this->current_page->save();
     }
 
     public function render()

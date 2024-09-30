@@ -36,12 +36,6 @@ return [
             'throw' => false,
         ],
 
-        'projects' => [
-            'driver' => 'local',
-            'root' => storage_path('projects'),
-            'throw' => false,
-        ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
